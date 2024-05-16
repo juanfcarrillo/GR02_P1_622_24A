@@ -1,0 +1,102 @@
+/* Estilos para el título */
+#titulo {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif; /* Fuente similar a Cheltenham */
+    margin-top: 50px; /* Ajusta el margen superior según sea necesario */
+    margin-bottom: 20px; /* Ajusta el margen inferior según sea necesario */
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.columna {
+    flex: 0 0 30%; /* Ocupa el 30% del espacio disponible */
+    text-align: center;
+    margin: 20px;
+}
+
+.columna img {
+    max-width: 100%;
+    max-height: 250px; /* Ajusta la altura máxima según tus necesidades */
+    width: auto;
+    height: auto;
+}
+
+.columna p {
+    margin: 10px 0;
+}
+
+button {
+    background-color: #253745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#formulario h2 {
+    font-size: 36px; /* Tamaño de letra más grande */
+    color: white; /* Texto blanco */
+}
+
+#formulario p {
+    font-size: 18px; /* Tamaño de letra más pequeño */
+    color: white; /* Texto blanco */
+}
+
+form {
+    margin-top: 20px;
+}
+
+form label, form input {
+    display: block;
+    margin: 10px auto; /* Centrar horizontalmente */
+    width: 50%; /* Ancho de los campos de entrada */
+}
+
+form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 50%; /* Ancho del botón */
+    margin-top: 20px; /* Espacio superior */
+}
+
+#formulario {
+    position: relative; /* Permitir el posicionamiento absoluto del botón */
+    background-color: rgba(0, 0, 0, 0.5); /* Negro con opacidad */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 30%; /* Ancho del formulario */
+    margin: auto; /* Centrar horizontalmente */
+}
+
+#cerrarFormulario {
+    position: absolute; /* Posicionamiento absoluto */
+    top: 10px; /* Distancia desde la parte superior */
+    right: 10px; /* Distancia desde la derecha */
+    background-color: #e09797; /* Color de fondo rojo */
+    color: white; /* Color del texto blanco */
+    border: none;
+    border-radius: 10%; /* Botón circular */
+    width: 45px; /* Ancho del botón */
+    height: 35px; /* Altura del botón */
+    font-size: 16px; /* Tamaño del texto */
+    cursor: pointer;
+}
+
+
