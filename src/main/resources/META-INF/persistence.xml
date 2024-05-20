@@ -18,7 +18,7 @@
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://database:3306/hotel"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="root"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
