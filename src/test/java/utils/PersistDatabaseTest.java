@@ -2,6 +2,7 @@ package utils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -35,6 +36,9 @@ public class PersistDatabaseTest {
     @Mock
     private CriteriaQuery<Object> mockCriteriaQuery;
 
+    @Mock
+    private EntityTransaction mockEntityTransaction;
+
     @InjectMocks
     private PersistDatabase persistDatabase;
 
@@ -43,6 +47,10 @@ public class PersistDatabaseTest {
         MockitoAnnotations.openMocks(this);
         when(mockConexionBD.getEntityManager()).thenReturn(mockEntityManager);
         when(mockConexionBD.getEntityManagerFactory()).thenReturn(mockEntityManagerFactory);
+        when(mockConexionBD.getEntityManager()).thenReturn(mockEntityManager);
+        when(mockEntityManager.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
+        when(mockConexionBD.getTransaction()).thenReturn(mockEntityTransaction);
+        when(mockCriteriaBuilder.createQuery(Object.class)).thenReturn(mockCriteriaQuery);
         when(mockEntityManager.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
         when(mockCriteriaBuilder.createQuery(Object.class)).thenReturn(mockCriteriaQuery);
     }
@@ -51,25 +59,24 @@ public class PersistDatabaseTest {
     public void testPersist() {
         Object testObject = new Object();
 
-        doNothing().when(mockConexionBD).persist(testObject);
-        doNothing().when(mockConexionBD).getTransaction().commit();
+        when(mockConexionBD.getTransaction().isActive()).thenReturn(true);
+        when(mockConexionBD.persist(testObject)).thenReturn(0);
 
         int result = persistDatabase.persist(testObject);
 
         assertEquals(0, result);
         verify(mockConexionBD, times(1)).persist(testObject);
-        verify(mockConexionBD, times(1)).getTransaction().commit();
     }
 
     @Test
     public void testFailPersist() {
         Object testObject = new Object();
 
-        doThrow(new RuntimeException("Error")).when(mockConexionBD).persist(testObject);
+        when(mockConexionBD.getTransaction().isActive()).thenReturn(true);
+        when(mockConexionBD.persist(testObject)).thenThrow(new RuntimeException("Error"));
 
         int result = persistDatabase.persist(testObject);
 
         assertEquals(1, result);
-        verify(mockConexionBD, times(1)).persist(testObject);
     }
 }

@@ -6,13 +6,14 @@
     <title>Hotel NewYork - Reservas</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-<header>
-    <h1 id="titulo">Gran Hotel NewYork</h1>
+<header class="flex">
+    <h1 class="titulo">Gran Hotel NewYork</h1>
 </header>
 
-<main>
+<main class="flex">
 
     <section id="rooms" class="carousel">
 
@@ -55,6 +56,7 @@
                         const roomElement = document.createElement('div')
                         roomElement.classList.add('card')
                         roomElement.classList.add("carousel-item")
+                        roomElement.classList.add("reserv")
                         roomElement.innerHTML =
                             "<p class='card-title'>Numero: " + room.roomNumber + "</p>" +
                             "<div class='card-body'>" +

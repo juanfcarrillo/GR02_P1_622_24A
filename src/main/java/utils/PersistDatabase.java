@@ -23,12 +23,10 @@ public class PersistDatabase {
             persistObject(object);
             transactionResult = 0;
         } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             rollbackTransaction();
             transactionResult = 1;
-        } finally {
-            endConnection();
         }
-
         return transactionResult;
     }
 
@@ -43,6 +41,7 @@ public class PersistDatabase {
     }
 
     private void createConection() {
+
         conexionBD.getTransaction().begin();
     }
 
@@ -64,6 +63,9 @@ public class PersistDatabase {
     }
 
     private void commitTransaction() {
+        if (!conexionBD.getTransaction().isActive()) {
+            conexionBD.getTransaction().begin();
+        }
         conexionBD.getTransaction().commit();
     }
 }
