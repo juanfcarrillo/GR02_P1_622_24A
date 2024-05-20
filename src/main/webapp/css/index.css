@@ -1,27 +1,37 @@
 .titulo {
-    font-size: 27px;
+    font-size: 2rem; /* Usar unidades rem para una mejor escalabilidad */
     font-weight: bold;
-    color: white;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    color: #ffffff; /* Usar código de color hexadecimal */
+    margin: 1rem 0; /* Margen superior e inferior de 1rem */
+    text-align: center; /* Centrar el texto */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Añadir sombra al texto */
 }
 
 .flex {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan en múltiples líneas */
+    gap: 1rem; /* Añadir espacio entre los elementos flexibles */
 }
 
 .reserv {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    border: 1px solid black;
-    padding: 10px;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1.25rem; /* Margen inferior de 1.25rem */
+    border: 1px solid #000000; /* Usar código de color hexadecimal */
+    padding: 1rem; /* Padding de 1rem */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ajustar sombra para mayor suavidad */
+    border-radius: 0.5rem; /* Añadir bordes redondeados */
+    background-color: #f8f9fa; /* Añadir color de fondo */
 }
 
 #rooms {
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan en múltiples líneas */
+    gap: 1rem; /* Añadir espacio entre los elementos */
+    justify-content: center; /* Centrar los elementos en el contenedor */
+    padding: 1rem; /* Añadir padding al contenedor */
+    background-color: #ffffff; /* Añadir color de fondo */
 }
