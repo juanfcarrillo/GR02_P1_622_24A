@@ -6,8 +6,14 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class PersistDatabase {
+    private final ConexionBD conexionBD;
 
     public PersistDatabase() {
+        this.conexionBD = new ConexionBD();
+    }
+
+    public PersistDatabase(ConexionBD conexionBD) {
+        this.conexionBD = conexionBD;
     }
 
     public int persist(Object object) {
@@ -17,9 +23,10 @@ public class PersistDatabase {
             persistObject(object);
             transactionResult = 0;
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
             rollbackTransaction();
             transactionResult = 1;
+        } finally {
+            endConnection();
         }
 
         return transactionResult;
@@ -27,34 +34,36 @@ public class PersistDatabase {
 
     public <T> List<T> getAll(Class<T> entityClass) {
         createConection();
-        CriteriaBuilder cb = ConexionBD.entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = conexionBD.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         cq.from(entityClass);
-        List<T> resultList = ConexionBD.entityManager.createQuery(cq).getResultList();
+        List<T> resultList = conexionBD.getEntityManager().createQuery(cq).getResultList();
         commitTransaction();
         return resultList;
     }
 
     private void createConection() {
-        ConexionBD.transaction.begin();
+        conexionBD.getTransaction().begin();
     }
 
     private void rollbackTransaction() {
-        if (ConexionBD.transaction.isActive()) {
-            ConexionBD.transaction.rollback();
+        if (conexionBD.getTransaction().isActive()) {
+            conexionBD.getTransaction().rollback();
         }
     }
 
     private void endConnection() {
-        ConexionBD.entityManager.close();
-        ConexionBD.entityManagerFactory.close();
+        conexionBD.getEntityManager().close();
+        conexionBD.getEntityManagerFactory().close();
     }
 
     private <T> void persistObject(T entityClass) {
-        ConexionBD.persist(entityClass);
+        createConection();
+        conexionBD.persist(entityClass);
+        commitTransaction();
     }
 
     private void commitTransaction() {
-        ConexionBD.transaction.commit();
+        conexionBD.getTransaction().commit();
     }
 }

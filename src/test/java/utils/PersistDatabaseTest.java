@@ -1,44 +1,75 @@
 package utils;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-class PersistDatabaseTest {
+public class PersistDatabaseTest {
 
-    @Test
-    public void should_return_0_if_succeeded() {
+    @Mock
+    private ConexionBD mockConexionBD;
+
+    @Mock
+    private EntityManager mockEntityManager;
+
+    @Mock
+    private EntityManagerFactory mockEntityManagerFactory;
+
+    @Mock
+    private CriteriaBuilder mockCriteriaBuilder;
+
+    @Mock
+    private CriteriaQuery<Object> mockCriteriaQuery;
+
+    @InjectMocks
+    private PersistDatabase persistDatabase;
+
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        Object testObject = new Object();
-
-        try (MockedStatic<ConexionBD> mockConexionBD = Mockito.mockStatic(ConexionBD.class)) {
-            mockConexionBD.when(() -> ConexionBD.persist(testObject)).thenReturn(0);
-
-            PersistDatabase persistDatabase = new PersistDatabase();
-            int result = persistDatabase.persist(testObject);
-
-            assertEquals(0, result);
-        }
+        when(mockConexionBD.getEntityManager()).thenReturn(mockEntityManager);
+        when(mockConexionBD.getEntityManagerFactory()).thenReturn(mockEntityManagerFactory);
+        when(mockEntityManager.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
+        when(mockCriteriaBuilder.createQuery(Object.class)).thenReturn(mockCriteriaQuery);
     }
 
     @Test
-    void should_return_1_if_failed() {
+    public void testPersist() {
         Object testObject = new Object();
 
-        try (MockedStatic<ConexionBD> mockConexionBD = Mockito.mockStatic(ConexionBD.class)) {
-            mockConexionBD.when(() -> ConexionBD.persist(testObject)).thenThrow(new RuntimeException("Error"));
+        doNothing().when(mockConexionBD).persist(testObject);
+        doNothing().when(mockConexionBD).getTransaction().commit();
 
-            PersistDatabase persistDatabase = new PersistDatabase();
-            int result = persistDatabase.persist(testObject);
+        int result = persistDatabase.persist(testObject);
 
-            assertEquals(1, result);
-        }
+        assertEquals(0, result);
+        verify(mockConexionBD, times(1)).persist(testObject);
+        verify(mockConexionBD, times(1)).getTransaction().commit();
+    }
+
+    @Test
+    public void testFailPersist() {
+        Object testObject = new Object();
+
+        doThrow(new RuntimeException("Error")).when(mockConexionBD).persist(testObject);
+
+        int result = persistDatabase.persist(testObject);
+
+        assertEquals(1, result);
+        verify(mockConexionBD, times(1)).persist(testObject);
     }
 }
