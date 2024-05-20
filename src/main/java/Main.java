@@ -1,43 +1,33 @@
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import model.entity.Cliente;
+import model.entity.Reservation;
+import model.entity.Room;
 
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
-
-        System.out.println("ASJGDHJASHDJKU");
-
-
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
 
-        try (emf; EntityManager em = emf.createEntityManager()) {
+        em.getTransaction().begin();
 
-            System.out.println("ASJGDHJASHDJKU");
+        Room room = new Room(101, 100.0, 2);
+        em.persist(room);
 
-            // Crear un nuevo objeto Cliente
-            Cliente cliente = new Cliente();
-            cliente.setId(200);
-            cliente.setNombre("Juan");
-            cliente.setApellidos("Perez");
+        Reservation reservation1 = new Reservation(LocalDate.now(), LocalDate.now().plusDays(1), 2, room);
+        Reservation reservation2 = new Reservation(LocalDate.now(), LocalDate.now().plusDays(2), 3, room);
 
-            em.getTransaction().begin();
+        room.addReservation(reservation1);
+        room.addReservation(reservation2);
 
-            em.persist(cliente);
+        em.persist(reservation1);
+        em.persist(reservation2);
 
-            em.getTransaction().commit();
+        em.getTransaction().commit();
 
-
-        } catch (Exception e) {
-            // Manejar cualquier excepción
-            //if (ConexionBD.transaction.isActive()) {
-            //    ConexionBD.transaction.rollback();
-            //}
-            System.out.println("ASJGDHJASHDJKU");
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-        // Cerrar el EntityManager
+        em.close();
+        emf.close();
     }
 }

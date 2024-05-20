@@ -8,9 +8,6 @@ import java.util.stream.Collectors;
 
 public class ReservaService {
     private final PersistDatabase persistDatabase;
-    public ReservaService(PersistDatabase mockPersistDatabase) {
-        persistDatabase = new PersistDatabase();
-    }
 
     public ReservaService() {
         persistDatabase = new PersistDatabase();

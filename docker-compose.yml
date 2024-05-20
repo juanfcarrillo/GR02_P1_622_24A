@@ -1,0 +1,19 @@
+version: '1.0'
+services:
+  database:
+    image: mysql:latest
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hotel
+    ports:
+      - "3306:3306"
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database

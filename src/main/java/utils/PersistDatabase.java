@@ -6,8 +6,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class PersistDatabase {
-    public PersistDatabase() {
-    }
 
     public int persist(Object object) {
         int transactionResult;
@@ -16,29 +14,12 @@ public class PersistDatabase {
             persistObject(object);
             transactionResult = 0;
         } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             rollbackTransaction();
             transactionResult = 1;
-        } finally {
-            ConexionBD.endConnection();
         }
 
         return transactionResult;
-    }
-
-    private void createConection() {
-        ConexionBD.transaction.begin();
-    }
-
-    private void rollbackTransaction() {
-        if (ConexionBD.transaction.isActive()) {
-            ConexionBD.transaction.rollback();
-        }
-    }
-
-    private <T> void persistObject(T entityClass) {
-        createConection();
-        ConexionBD.entityManager.persist(entityClass);
-        commitTransaction();
     }
 
     public <T> List<T> getAll(Class<T> entityClass) {
@@ -51,6 +32,24 @@ public class PersistDatabase {
         return resultList;
     }
 
+    private void createConection() {
+        ConexionBD.transaction.begin();
+    }
+
+    private void rollbackTransaction() {
+        if (ConexionBD.transaction.isActive()) {
+            ConexionBD.transaction.rollback();
+        }
+    }
+
+    private void endConnection() {
+        ConexionBD.entityManager.close();
+        ConexionBD.entityManagerFactory.close();
+    }
+
+    private <T> void persistObject(T entityClass) {
+        ConexionBD.persist(entityClass);
+    }
 
     private void commitTransaction() {
         ConexionBD.transaction.commit();
