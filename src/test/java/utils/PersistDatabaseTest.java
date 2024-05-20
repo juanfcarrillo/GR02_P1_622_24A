@@ -19,8 +19,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * Clase de prueba para la clase PersistDatabase.
+ * Utiliza Mockito para simular objetos y comportamientos en las pruebas.
+ */
 public class PersistDatabaseTest {
 
+    // Mocks para las dependencias de PersistDatabase
     @Mock
     private ConexionBD mockConexionBD;
 
@@ -39,9 +44,13 @@ public class PersistDatabaseTest {
     @Mock
     private EntityTransaction mockEntityTransaction;
 
+    // Objeto de la clase a probar
     @InjectMocks
     private PersistDatabase persistDatabase;
 
+    /**
+     * Configura los comportamientos de los mocks antes de cada prueba.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -55,28 +64,42 @@ public class PersistDatabaseTest {
         when(mockCriteriaBuilder.createQuery(Object.class)).thenReturn(mockCriteriaQuery);
     }
 
+    /**
+     * Prueba el método persist() cuando la persistencia tiene éxito.
+     */
     @Test
     public void testPersist() {
+        // Objeto de prueba
         Object testObject = new Object();
 
+        // Configura el comportamiento esperado del mock
         when(mockConexionBD.getTransaction().isActive()).thenReturn(true);
         when(mockConexionBD.persist(testObject)).thenReturn(0);
 
+        // Ejecuta el método a probar
         int result = persistDatabase.persist(testObject);
 
+        // Verifica el resultado esperado y las interacciones con los mocks
         assertEquals(0, result);
         verify(mockConexionBD, times(1)).persist(testObject);
     }
 
+    /**
+     * Prueba el método persist() cuando la persistencia falla.
+     */
     @Test
     public void testFailPersist() {
+        // Objeto de prueba
         Object testObject = new Object();
 
+        // Configura el comportamiento esperado del mock
         when(mockConexionBD.getTransaction().isActive()).thenReturn(true);
         when(mockConexionBD.persist(testObject)).thenThrow(new RuntimeException("Error"));
 
+        // Ejecuta el método a probar
         int result = persistDatabase.persist(testObject);
 
+        // Verifica el resultado esperado
         assertEquals(1, result);
     }
 }
