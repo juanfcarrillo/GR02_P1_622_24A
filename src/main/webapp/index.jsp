@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -11,6 +10,7 @@
 <body>
 <header class="flex">
     <h1 class="titulo">Gran Hotel NewYork</h1>
+    <div class="alert alert-info">Cuartos disponibles</div>
 </header>
 
 <main class="flex">
@@ -22,22 +22,22 @@
     <dialog id="my_modal_1" class="modal">
         <div class="modal-box">
             <h2>Reservar Habitacion</h2>
-                <form action="reservation-servlet" method="POST">
+            <form action="reservation-servlet" method="POST">
 
-                    <input type="hidden" id="roomNumber" name="roomNumber">
+                <input type="hidden" id="roomNumber" name="roomNumber">
 
 
-                    <label for="checkIn">Check In:</label>
-                    <input type="date" id="checkIn" name="checkIn" class="input input-bordered" required><br>
+                <label for="checkIn">Check In:</label>
+                <input type="date" id="checkIn" name="checkIn" class="input input-bordered" required><br>
 
-                    <label for="checkOut">Check Out:</label>
-                    <input type="date" id="checkOut" name="checkOut" class="input input-bordered" required><br>
+                <label for="checkOut">Check Out:</label>
+                <input type="date" id="checkOut" name="checkOut" class="input input-bordered" required><br>
 
-                    <label for="peopleAmount">Cantidad de Personas:</label>
-                    <input type="number" id="peopleAmount" name="peopleAmount" class="input input-bordered" min="1" required><br>
+                <label for="peopleAmount">Cantidad de Personas:</label>
+                <input type="number" id="peopleAmount" name="peopleAmount" class="input input-bordered" min="1" required><br>
 
-                    <input type="submit" class="btn" value="Reservar">
-                </form>
+                <input type="submit" class="btn" value="Reservar">
+            </form>
         </div>
     </dialog>
 
