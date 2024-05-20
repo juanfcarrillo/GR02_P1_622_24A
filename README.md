@@ -43,31 +43,40 @@ Este repositorio contiene los archivos necesarios para desplegar una aplicación
 
 Para construir las imágenes Docker, ejecuta el siguiente comando en la raíz del proyecto:
 
+docker-compose -f docker-compose.yml build.
 
-docker-compose -f docker-compose.yml build
+## Envío de Imágenes a Docker Hub
 
-##Envío de Imágenes a Docker Hub
 Una vez que las imágenes han sido construidas, puedes enviarlas a Docker Hub utilizando los siguientes comandos:
 
 
-docker tag gr02_p1_622_24a-webapp:latest jexdev13/webapp:latest_web
-docker tag mysql:latest jexdev13/database:latest_database
-docker push jexdev13/database:latest_database
-docker push jexdev13/webapp:latest_web
-Ejecución desde Docker Remoto
-Finalmente, para ejecutar la aplicación desde un entorno Docker remoto, sigue estos pasos:
+docker tag gr02_p1_622_24a-webapp:latest jexdev13/webapp:latest_web.
 
-Descarga las imágenes desde Docker Hub:
+docker tag mysql:latest jexdev13/database:latest_database.
 
-docker pull jexdev13/webapp:latest_web
-docker pull jexdev13/webapp:latest_sql
-Crea una red Docker para conectar los contenedores:
+docker push jexdev13/database:latest_database.
+
+docker push jexdev13/webapp:latest_web.
+
+## Ejecución desde Docker Remoto.
+
+## Finalmente, para ejecutar la aplicación desde un entorno Docker remoto, sigue estos pasos:
+
+# Descarga las imágenes desde Docker Hub:
+
+docker pull jexdev13/webapp:latest_web.
+
+docker pull jexdev13/webapp:latest_sql.
+
+## Crea una red Docker para conectar los contenedores:
 
 docker network create my-network
-Inicia el contenedor de la base de datos MySQL:
+
+## Inicia el contenedor de la base de datos MySQL:
 
 docker run --name database -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=hotel -p 3306:3306 -d --network my-network jexdev13/webapp:latest_sql
-Finalmente, inicia el contenedor de la aplicación web:
+
+## Finalmente, inicia el contenedor de la aplicación web:
 
 docker run -p 8080:8080 --network my-network jexdev13/webapp:latest_web
 
