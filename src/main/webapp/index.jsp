@@ -9,12 +9,11 @@
 </head>
 <body>
 <header class="flex">
-    <h1 class="titulo">Gran Hotel NewYork</h1>
-    <div class="alert alert-info">Cuartos disponibles</div>
+    <h1 class="titulo">Gran Hotel NewYork-Cuartos diponibles</h1>
 </header>
 
 <main class="flex">
-
+    <div></div>
     <section id="rooms" class="carousel">
 
     </section>
