@@ -17,6 +17,7 @@ public class RoomService {
         this.persistDatabase = persistDatabase;
     }
 
+
     public void registerRoom(Room room) {
         int result = persistDatabase.persist(room);
         if (result == 0) {

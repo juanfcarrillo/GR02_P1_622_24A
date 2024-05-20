@@ -7,6 +7,9 @@ import java.util.List;
 
 public class PersistDatabase {
 
+    public PersistDatabase() {
+    }
+
     public int persist(Object object) {
         int transactionResult;
 

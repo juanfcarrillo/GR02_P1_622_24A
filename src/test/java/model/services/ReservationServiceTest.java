@@ -30,6 +30,7 @@ public class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        reservationService = new ReservationService(mockPersistDatabase, mockRoomService);
     }
 
     @Test

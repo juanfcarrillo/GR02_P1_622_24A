@@ -8,13 +8,19 @@ import java.util.List;
 
 public class ReservationService {
     private final PersistDatabase persistDatabase;
+    private RoomService roomService;
 
     public ReservationService() {
+        this.roomService = new RoomService();
         this.persistDatabase = new PersistDatabase();
     }
 
+    public ReservationService(PersistDatabase persistDatabase, RoomService roomService) {
+        this.persistDatabase = persistDatabase;
+        this.roomService = roomService;
+    }
+
     public void createReservation(Reservation reservation, int roomNumber) {
-        RoomService roomService = new RoomService();
         Room room = roomService.getRoomByNumber(roomNumber);
 
         if (room != null) {

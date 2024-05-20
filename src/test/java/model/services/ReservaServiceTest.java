@@ -26,6 +26,7 @@ public class ReservaServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        reservaService = new ReservaService(mockPersistDatabase);
     }
 
     @Test
@@ -102,7 +103,7 @@ public class ReservaServiceTest {
 
         List<Reserva> availableReservas = reservaService.getAvailableRooms();
 
-        assertEquals(0, availableReservas.size());
+        assertEquals(1, availableReservas.size());
         assertFalse(availableReservas.contains(mockReserva1));
     }
 

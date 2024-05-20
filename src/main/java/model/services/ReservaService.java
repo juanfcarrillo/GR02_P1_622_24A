@@ -13,6 +13,10 @@ public class ReservaService {
         persistDatabase = new PersistDatabase();
     }
 
+    public ReservaService(PersistDatabase persistDatabase) {
+        this.persistDatabase = persistDatabase;
+    }
+
     public void registrarReserva(Reserva reserva) {
         int result = persistDatabase.persist(reserva);
         if (result == 0) {

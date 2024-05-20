@@ -15,6 +15,7 @@ class PersistDatabaseTest {
 
     @Test
     public void should_return_0_if_succeeded() {
+        MockitoAnnotations.openMocks(this);
         Object testObject = new Object();
 
         try (MockedStatic<ConexionBD> mockConexionBD = Mockito.mockStatic(ConexionBD.class)) {
