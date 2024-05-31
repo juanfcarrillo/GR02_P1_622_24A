@@ -16,6 +16,9 @@ public class Room implements Serializable {
     private int roomNumber;
 
     @Column(nullable = false)
+    private String roomName;
+
+    @Column(nullable = false)
     private double price;
 
     @Column(nullable = false)
@@ -27,16 +30,18 @@ public class Room implements Serializable {
     // Constructors, getters, and setters
     public Room() {}
 
-    public Room(int roomNumber, double price, int capacity) {
+    public Room(int roomNumber, double price, int capacity, String roomName) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.capacity = capacity;
+        this.roomName = roomName;
     }
 
     @Override
     public String toString() {
-        return "{"+
+        return "{" +
                 "\"id\": " + id +
+                ", \"roomName\": \"" + roomName + "\"" +
                 ", \"roomNumber\": " + roomNumber +
                 ", \"price\": " + price +
                 ", \"capacity\": " + capacity +
@@ -91,5 +96,13 @@ public class Room implements Serializable {
     public void removeReservation(Reservation reservation) {
         reservations.remove(reservation);
         reservation.setRoom(null);
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }
