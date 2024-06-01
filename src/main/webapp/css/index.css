@@ -17,3 +17,15 @@
 #rooms {
     @apply flex gap-2;
 }
+
+/* CSS para la descripción */
+.card-body {
+    position: relative;
+    overflow: hidden;
+}
+
+.description:hover {
+    opacity: 1;
+}
+
+

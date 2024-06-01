@@ -16,7 +16,7 @@
 <body>
 <main class="main">
     <section class="container">
-        <h1 class="title">Reservations</h1>
+        <h1 class="title flex flex-col items-center text-4xl font-bold">Reservations</h1>
         <div id="reservations" class="carousel">
         </div>
     </section>

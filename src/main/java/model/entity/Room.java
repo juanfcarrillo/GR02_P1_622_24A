@@ -24,17 +24,25 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private int capacity;
 
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private String imageURL;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations = new HashSet<>();
 
     // Constructors, getters, and setters
     public Room() {}
 
-    public Room(int roomNumber, double price, int capacity, String roomName) {
+    public Room(int roomNumber, double price, int capacity, String roomName, String description, String imageURL) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.capacity = capacity;
         this.roomName = roomName;
+        this.description = description;
+        this.imageURL = imageURL;
     }
 
     @Override
@@ -45,6 +53,8 @@ public class Room implements Serializable {
                 ", \"roomNumber\": " + roomNumber +
                 ", \"price\": " + price +
                 ", \"capacity\": " + capacity +
+                ", \"description\": \"" + description + "\"" +
+                ", \"imageURL\": \"" + imageURL + "\"" +
                 "}";
     }
 
@@ -104,5 +114,21 @@ public class Room implements Serializable {
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
