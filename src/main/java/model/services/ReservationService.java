@@ -22,9 +22,10 @@ public class ReservationService {
 
     public void createReservation(Reservation reservation, int roomNumber) {
         Room room = roomService.getRoomByNumber(roomNumber);
-
+        System.out.println("Room found: " + room);
         if (room != null) {
             reservation.setRoom(room);
+            System.out.println("Creating reservation: " + reservation);
             int result = persistDatabase.persist(reservation);
             if (result == 0) {
                 System.out.println("Reservation created successfully");

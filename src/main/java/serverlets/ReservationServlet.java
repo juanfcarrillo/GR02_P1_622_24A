@@ -38,11 +38,13 @@ public class ReservationServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Obtener los parámetros del formulario
         String roomNumber = request.getParameter("roomNumber");
         String checkIn = request.getParameter("checkIn");
         String checkOut = request.getParameter("checkOut");
         String people = request.getParameter("peopleAmount");
 
+        // Crear una nueva instancia de Reservation
         Reservation newReservation = Reservation.createReservation(
                 LocalDate.parse(checkIn),
                 LocalDate.parse(checkOut),

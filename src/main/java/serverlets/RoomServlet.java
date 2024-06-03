@@ -23,9 +23,9 @@ public class RoomServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Room> availableRooms = roomService.getAllRooms();
 
-        AddData addData = new AddData();
+        //AddData addData = new AddData();
 
-        addData.addData();
+        //addData.addData();
 
         String availableRoomsJson = availableRooms.stream()
                 .map(Room::toString)

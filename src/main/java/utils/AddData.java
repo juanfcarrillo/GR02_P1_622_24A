@@ -19,7 +19,7 @@ public class AddData {
 
         em.getTransaction().begin();
 
-        Room room = new Room(101, 100.0, 2);
+        /*Room room = new Room(101, 100.0, 2, "Prueba2");
         em.persist(room);
 
         Reservation reservation1 = new Reservation(LocalDate.now(), LocalDate.now().plusDays(1), 2, room);
@@ -34,6 +34,6 @@ public class AddData {
         em.getTransaction().commit();
 
         em.close();
-        emf.close();
+        emf.close();*/
     }
 }
