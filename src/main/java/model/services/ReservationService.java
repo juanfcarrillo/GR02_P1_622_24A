@@ -37,7 +37,7 @@ public class ReservationService {
         }
     }
 
-    public boolean updateReservation(Long reservationId, LocalDate newStartDate, LocalDate newEndDate, int newPeopleAmount, int newRoomNumber) {
+    public boolean updateReservation(Long reservationId, LocalDate newStartDate, LocalDate newEndDate, int newPeopleAmount, int newRoomNumber, String reservationNotes) {
         Reservation existingReservation = persistDatabase.find(Reservation.class, reservationId);
 
         if (existingReservation != null) {
@@ -54,6 +54,7 @@ public class ReservationService {
                 existingReservation.setEndDate(newEndDate);
                 existingReservation.setPeopleAmount(newPeopleAmount);
                 existingReservation.setRoom(newRoom);
+                existingReservation.setReservationNotes(reservationNotes);
                 persistDatabase.update(existingReservation);
                 return true;
             } else {

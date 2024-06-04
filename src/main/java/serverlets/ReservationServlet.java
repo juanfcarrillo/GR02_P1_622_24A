@@ -14,6 +14,7 @@ import model.services.ReservationService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(name="reservation-servlet", urlPatterns = {"/reservation-servlet"})
 public class ReservationServlet extends HttpServlet {
@@ -36,15 +37,19 @@ public class ReservationServlet extends HttpServlet {
         }
 
         // Convertir las listas a JSON
-        String activeReservationsJson = activeReservations.stream()
+        String activeReservationsJson = activeReservations.isEmpty() ?
+                "[]" :
+                activeReservations.stream()
                  .map(Reservation::toString)
                  .reduce("[", (acc, room) -> acc + room + ",")
                  .replaceFirst(".$", "]");
 
-        String cancelledReservationsJson = cancelledReservations.stream()
-                         .map(Reservation::toString)
-                         .reduce("[", (acc, room) -> acc + room + ",")
-                         .replaceFirst(".$", "]");
+        String cancelledReservationsJson = cancelledReservations.isEmpty() ?
+                "[]" :
+                cancelledReservations.stream()
+                        .map(Reservation::toString)
+                        .collect(Collectors.joining(",", "[", "]"));
+
 
         // Crear un objeto JSON que contenga ambas listas
         String combinedJson = "{\"activeReservations\":" + activeReservationsJson + ",\"cancelledReservations\":" + cancelledReservationsJson + "}";
@@ -65,30 +70,34 @@ public class ReservationServlet extends HttpServlet {
                 String roomNumber = request.getParameter("roomNumber");
                 String checkIn = request.getParameter("checkIn");
                 String checkOut = request.getParameter("checkOut");
-                String people = request.getParameter("peopleAmount");
+                String people = request.getParameter("capacity");
+                String reservationNotes = request.getParameter("reservationNotes");
 
                 // Crear una nueva instancia de Reservation
                 Reservation newReservation = Reservation.createReservation(
                         LocalDate.parse(checkIn),
                         LocalDate.parse(checkOut),
-                        Integer.parseInt(people)
+                        Integer.parseInt(people),
+                        reservationNotes // Añadir las notas de la reservación
                 );
                 success = reservationService.createReservation(newReservation, Integer.parseInt(roomNumber));
                 break;
             case "update":
 
                 Long reservationId = Long.parseLong(request.getParameter("reservationId"));
-                String newRoomNumber = request.getParameter("newRoomNumber");
+                String newRoomNumber = request.getParameter("roomNumber");
                 String newCheckIn = request.getParameter("newCheckIn");
                 String newCheckOut = request.getParameter("newCheckOut");
-                String newPeople = request.getParameter("newPeopleAmount");
+                String newPeople = request.getParameter("peopleAmount");
+                String newReservationNotes = request.getParameter("newReservationNotes");
 
                 success = reservationService.updateReservation(
                         reservationId,
                         LocalDate.parse(newCheckIn),
                         LocalDate.parse(newCheckOut),
                         Integer.parseInt(newPeople),
-                        Integer.parseInt(newRoomNumber)
+                        Integer.parseInt(newRoomNumber),
+                        newReservationNotes
                 );
                 break;
             case "delete":

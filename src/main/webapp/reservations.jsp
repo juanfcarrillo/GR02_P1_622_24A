@@ -28,27 +28,38 @@
     <dialog id="modalModificarReserva" class="modal" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
         <div class="modal-box text-white">
             <h2 id="modal-title">Modificar Reserva</h2>
-            <form action="reservation-servlet" method="POST" class="space-y-4">
+            <form id="modificarReservaForm" action="reservation-servlet" method="POST" class="space-y-4">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" id="reservationId" name="reservationId">
+
                 <div>
-                    <label for="newCheckIn" class="block">Nueva Fecha de Check In:</label>
-                    <input type="date" id="newCheckIn" name="newCheckIn" class="input input-bordered w-full" required>
+                    <label for="roomNumber" class="block">Número de Habitación:</label>
+                    <input type="text" id="roomNumber" name="roomNumber" class="input input-bordered w-full" readonly style="color: gray;">
                 </div>
+
                 <div>
-                    <label for="newCheckOut" class="block">Nueva Fecha de Check Out:</label>
-                    <input type="date" id="newCheckOut" name="newCheckOut" class="input input-bordered w-full" required>
+                    <label for="peopleAmount" class="block">Cantidad de Personas:</label>
+                    <input type="text" id="peopleAmount" name="peopleAmount" class="input input-bordered w-full" readonly style="color: gray;">
                 </div>
+
                 <div>
-                    <label for="newPeopleAmount" class="block">Nueva Cantidad de Personas:</label>
-                    <input type="number" id="newPeopleAmount" name="newPeopleAmount" class="input input-bordered w-full" min="1" required>
+                    <label for="startDate" class="block">Nueva Fecha de Check In:</label>
+                    <input type="date" id="startDate" name="startDate" class="input input-bordered w-full" required>
                 </div>
+
                 <div>
-                    <label for="newRoomNumber" class="block">Nuevo Número de Habitación:</label>
-                    <input type="number" id="newRoomNumber" name="newRoomNumber" class="input input-bordered w-full" required>
+                    <label for="endDate" class="block">Nueva Fecha de Check Out:</label>
+                    <input type="date" id="endDate" name="endDate" class="input input-bordered w-full" required>
                 </div>
+
+                <div>
+                    <label for="reservationNotes" class="block">Nuevas Notas de Reserva:</label>
+                    <textarea id="reservationNotes" name="reservationNotes" class="textarea textarea-bordered w-full" rows="4"></textarea>
+                </div>
+
                 <input type="submit" class="btn w-full bg-blue-500 text-white" value="Modificar">
             </form>
+
         </div>
     </dialog>
 
@@ -71,52 +82,87 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             fetch('reservation-servlet')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    const activeReservations = data.activeReservations;
-                    const cancelledReservations = data.cancelledReservations;
+                    console.log("Data received from server:", data);
+
+                    const activeReservations = data.activeReservations || [];
+                    const cancelledReservations = data.cancelledReservations || [];
+
+                    console.log("Active Reservations:", activeReservations);
+                    console.log("Cancelled Reservations:", cancelledReservations);
 
                     activeReservations.forEach(reservation => {
+                        console.log("Processing active reservation:", reservation);
+
                         const reservationElement = document.createElement('div');
-                        reservationElement.classList.add('card', 'carousel-item', 'reserv' , 'm-2');
+                        reservationElement.classList.add('card', 'carousel-item', 'reserv', 'm-2');
                         reservationElement.innerHTML =
-                            "<p class='card-title'>Reservacion N:" + reservation.id + "</p>" +
+                            "<p class='card-title'>Reservación N:" + reservation.id + "</p>" +
                             "<div class='card-body mt-2 relative'>" +
                             "<p>Check In: " + reservation.startDate + "</p>" +
                             "<p>Check Out: " + reservation.endDate + "</p>" +
                             "<p>Room: " + reservation.roomNumber + "</p>" +
                             "<p>People Amount: " + reservation.peopleAmount + "</p>" +
-                            "<button onclick='modificarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Modificar</button>" +
+                            "<p>Notes: " + (reservation.reservationNotes ? reservation.reservationNotes : "No notes") + "</p>" +
+
+                            `<button onclick='modificarReserva(`
+                            + reservation.id + `, `
+                            + reservation.roomNumber + `, `
+                            + reservation.peopleAmount + `) 'class='btn bg-blue-500 text-white m-2'>Modificar</button>` +
                             "<button onclick='eliminarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white ml-2 mr-2'>Eliminar</button>" +
                             "</div>";
                         document.getElementById("active-reservations").appendChild(reservationElement);
                     });
 
                     cancelledReservations.forEach(reservation => {
+                        console.log("Processing cancelled reservation:", reservation);
+
                         const reservationElement = document.createElement('div');
-                        reservationElement.classList.add('card', 'carousel-item', 'reserv' , 'm-2');
+                        reservationElement.classList.add('card', 'carousel-item', 'reserv', 'm-2');
                         reservationElement.innerHTML =
-                            "<p class='card-title'>Reservacion N:" + reservation.id + "</p>" +
+                            "<p class='card-title'>Reservación N:" + reservation.id + "</p>" +
                             "<div class='card-body'>" +
                             "<p>Check In: " + reservation.startDate + "</p>" +
                             "<p>Check Out: " + reservation.endDate + "</p>" +
                             "<p>Room: " + reservation.roomNumber + "</p>" +
                             "<p>People Amount: " + reservation.peopleAmount + "</p>" +
+                            "<p>Notes: " + (reservation.reservationNotes ? reservation.reservationNotes : "No notes") + "</p>" +
                             "</div>";
                         document.getElementById("cancelled-reservations").appendChild(reservationElement);
                     });
+                })
+                .catch(error => {
+                    console.error('Error fetching reservations:', error);
                 });
         });
 
-        function modificarReserva(id) {
+
+        function modificarReserva(id, room, capacity, checkIn, checkOut, notes) {
+            // Llenar los campos del formulario con la información de la reserva seleccionada
             document.getElementById("reservationId").value = id;
-            document.getElementById("modalModificarReserva").showModal();
+            document.getElementById("roomNumber").value = room;
+            document.getElementById("peopleAmount").value = capacity;
+
+            // Mostrar el modal
+            const modal = document.getElementById("modalModificarReserva");
+            if (typeof modal.showModal === "function") {
+                modal.showModal();
+            } else {
+                console.error("Dialog API not supported");
+            }
         }
 
         function eliminarReserva(id) {
             document.getElementById("reservationIdEliminar").value = id;
             document.getElementById("modalEliminarReserva").showModal();
         }
+
     </script>
 </main>
 </body>
