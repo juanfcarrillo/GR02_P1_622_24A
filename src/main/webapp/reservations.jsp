@@ -1,11 +1,5 @@
 <%@ page import="model.entity.Reservation" %>
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: juancarrillo
-  Date: 19/5/24
-  Time: 7:47 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -15,29 +9,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
+<header>
+    <h1 class="title flex flex-col items-center text-4xl font-bold text-white py-4">Reservations</h1>
+</header>
 <main class="main">
-    <section class="container">
-        <h1 class="title flex flex-col items-center text-4xl font-bold">Reservations</h1>
-        <div id="reservations" class="carousel">
-            <%
-                List<Reservation> reservations = (List<model.entity.Reservation>) request.getAttribute("reservations");
-                if (reservations != null) {
-                    for (model.entity.Reservation reservation : reservations) {
-            %>
-            <div class="card carousel-item reserv">
-                <p class="card-title">Reservación N: <%= reservation.getId() %></p>
-                <div class="card-body">
-                    <p>Check In: <%= reservation.getStartDate() %></p>
-                    <p>Check Out: <%= reservation.getEndDate() %></p>
-                    <p>Room: <%= reservation.getRoom().getRoomNumber() %></p>
-                    <p>People Amount: <%= reservation.getPeopleAmount() %></p>
-                    <button onclick="modificarReserva(<%= reservation.getId() %>)" class="btn bg-blue-500 text-white">Modificar</button>
-                </div>
-            </div>
-            <%
-                    }
-                }
-            %>
+    <section class="container carousel gap-4 md:gap-6 flex flex-col">
+        <h2 class="text-2xl font-bold">Active Reservations</h2>
+        <div id="active-reservations" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 md:gap-2">
+            <!-- Tarjetas de reservaciones activas se generarán aquí -->
+        </div>
+        <h2 class="text-2xl font-bold">Cancelled Reservations</h2>
+        <div id="cancelled-reservations" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 md:gap-2">
+            <!-- Tarjetas de reservaciones inactivas se generarán aquí -->
         </div>
     </section>
 
@@ -90,10 +73,28 @@
             fetch('reservation-servlet')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    data.forEach(reservation => {
+                    const activeReservations = data.activeReservations;
+                    const cancelledReservations = data.cancelledReservations;
+
+                    activeReservations.forEach(reservation => {
                         const reservationElement = document.createElement('div');
-                        reservationElement.classList.add('card', 'carousel-item', 'reserv');
+                        reservationElement.classList.add('card', 'carousel-item', 'reserv' , 'm-2');
+                        reservationElement.innerHTML =
+                            "<p class='card-title'>Reservacion N:" + reservation.id + "</p>" +
+                            "<div class='card-body mt-2 relative'>" +
+                            "<p>Check In: " + reservation.startDate + "</p>" +
+                            "<p>Check Out: " + reservation.endDate + "</p>" +
+                            "<p>Room: " + reservation.roomNumber + "</p>" +
+                            "<p>People Amount: " + reservation.peopleAmount + "</p>" +
+                            "<button onclick='modificarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Modificar</button>" +
+                            "<button onclick='eliminarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white ml-2 mr-2'>Eliminar</button>" +
+                            "</div>";
+                        document.getElementById("active-reservations").appendChild(reservationElement);
+                    });
+
+                    cancelledReservations.forEach(reservation => {
+                        const reservationElement = document.createElement('div');
+                        reservationElement.classList.add('card', 'carousel-item', 'reserv' , 'm-2');
                         reservationElement.innerHTML =
                             "<p class='card-title'>Reservacion N:" + reservation.id + "</p>" +
                             "<div class='card-body'>" +
@@ -101,17 +102,15 @@
                             "<p>Check Out: " + reservation.endDate + "</p>" +
                             "<p>Room: " + reservation.roomNumber + "</p>" +
                             "<p>People Amount: " + reservation.peopleAmount + "</p>" +
-                            "<button onclick='modificarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Modificar</button>" +
-                            "<button onclick='eliminarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Eliminar</button>" +
-                        "</div>";
-                        document.getElementById("reservations").appendChild(reservationElement);
+                            "</div>";
+                        document.getElementById("cancelled-reservations").appendChild(reservationElement);
                     });
                 });
         });
 
         function modificarReserva(id) {
             document.getElementById("reservationId").value = id;
-            document.getElementById("modalEliminarReserva")
+            document.getElementById("modalModificarReserva").showModal();
         }
 
         function eliminarReserva(id) {

@@ -23,17 +23,35 @@ public class ReservationServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         List<Reservation> reservations = reservationService.getAllReservations();
+        List<Reservation> reservations = reservationService.getAllReservations();
+        List<Reservation> activeReservations = new ArrayList<>();
+        List<Reservation> cancelledReservations = new ArrayList<>();
 
-         String reservationsJson = reservations.stream()
+        for (Reservation reservation : reservations) {
+            if (reservation.isReserved()) {
+                activeReservations.add(reservation);
+            } else {
+                cancelledReservations.add(reservation);
+            }
+        }
+
+        // Convertir las listas a JSON
+        String activeReservationsJson = activeReservations.stream()
                  .map(Reservation::toString)
                  .reduce("[", (acc, room) -> acc + room + ",")
                  .replaceFirst(".$", "]");
 
+        String cancelledReservationsJson = cancelledReservations.stream()
+                         .map(Reservation::toString)
+                         .reduce("[", (acc, room) -> acc + room + ",")
+                         .replaceFirst(".$", "]");
+
+        // Crear un objeto JSON que contenga ambas listas
+        String combinedJson = "{\"activeReservations\":" + activeReservationsJson + ",\"cancelledReservations\":" + cancelledReservationsJson + "}";
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
-        response.getWriter().print(reservationsJson);
+        response.getWriter().print(combinedJson);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
