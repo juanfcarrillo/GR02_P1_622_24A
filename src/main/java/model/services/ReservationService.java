@@ -4,6 +4,7 @@ import model.entity.Reservation;
 import model.entity.Room;
 import utils.PersistDatabase;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReservationService {
@@ -37,9 +38,34 @@ public class ReservationService {
         }
     }
 
-    public void updateReservation() {
-        // Update an existing reservation
+    public boolean updateReservation(Long reservationId, LocalDate newStartDate, LocalDate newEndDate, int newPeopleAmount, int newRoomNumber) {
+        Reservation existingReservation = persistDatabase.find(Reservation.class, reservationId);
+
+        if (existingReservation != null) {
+            Room newRoom = roomService.getRoomByNumber(newRoomNumber);
+            if (newRoom == null) {
+                return false; // Nueva habitación no encontrada
+            }
+
+            // Validar disponibilidad
+            List<Reservation> conflictingReservations = persistDatabase
+                    .checkReservationAvailability(newRoom.getId(), reservationId, newStartDate, newEndDate);
+
+            if (conflictingReservations.isEmpty()) {
+                existingReservation.setStartDate(newStartDate);
+                existingReservation.setEndDate(newEndDate);
+                existingReservation.setPeopleAmount(newPeopleAmount);
+                existingReservation.setRoom(newRoom);
+                persistDatabase.update(existingReservation);
+                return true;
+            } else {
+                return false; // Conflicto con otra reserva
+            }
+        }
+        return false; // Reserva no encontrada
     }
+
+
 
     public void deleteReservation() {
         // Delete an existing reservation
