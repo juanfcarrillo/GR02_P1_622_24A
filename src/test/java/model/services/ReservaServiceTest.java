@@ -104,7 +104,7 @@ public class ReservaServiceTest {
         List<Reserva> availableReservas = reservaService.getAvailableRooms();
 
         assertEquals(1, availableReservas.size());
-        assertFalse(availableReservas.contains(mockReserva1));
+        assertFalse(availableReservas.contains(mockReserva2));
     }
 
 }
