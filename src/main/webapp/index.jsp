@@ -21,6 +21,7 @@
                 <form action="reservation-servlet" method="POST" class="space-y-4">
                     <input type="hidden" name="action" value="create">
                     <input type="hidden" id="roomNumber" name="roomNumber">
+                    <input type="hidden" id="capacity" name="capacity">
                     <div>
                         <label for="checkIn" class="block">Check In:</label>
                         <input type="date" id="checkIn" name="checkIn" class="input input-bordered w-full" required>
@@ -30,8 +31,12 @@
                         <input type="date" id="checkOut" name="checkOut" class="input input-bordered w-full" required>
                     </div>
                     <div>
-                        <label for="peopleAmount" class="block">Cantidad de Personas:</label>
-                        <input type="number" id="peopleAmount" name="peopleAmount" class="input input-bordered w-full" min="1" required>
+                        <input type="checkbox" id="includeNotes" name="includeNotes" class="mr-2">
+                        <label for="includeNotes" class="inline-block">Incluir notas de reservación</label>
+                        <div id="notesSection" class="mt-2 hidden">
+                            <label for="reservationNotes" class="block">Notas de reservación:</label>
+                            <textarea id="reservationNotes" name="reservationNotes" class="textarea textarea-bordered w-full" rows="4"></textarea>
+                        </div>
                     </div>
                     <input type="submit" class="btn w-full bg-blue-500 text-white" value="Reservar">
                 </form>
@@ -39,11 +44,22 @@
         </dialog>
 
         <script>
-            function reservar(numero) {
+            function reservar(numero, cantidad) {
                 console.log(numero);
+                console.log(cantidad);
                 my_modal_1.showModal();
                 document.getElementById("roomNumber").value = numero;
+                document.getElementById("capacity").value = cantidad;
             }
+
+            document.getElementById('includeNotes').addEventListener('change', function () {
+                const notesSection = document.getElementById('notesSection');
+                if (this.checked) {
+                    notesSection.classList.remove('hidden');
+                } else {
+                    notesSection.classList.add('hidden');
+                }
+            });
 
             document.addEventListener('DOMContentLoaded', () => {
                 fetch('room-servlet')
@@ -59,11 +75,11 @@
                                 "<div class='description absolute inset-0 flex items-center justify-center text-white text-center bg-black bg-opacity-75 rounded-md opacity-0 transition-opacity duration-300 m-8 p-2'>" + room.description + "</div>" +
                                 "</div>" +
                                 "<div class='text-left pl-4 mb-2'>" +
-                                "<p>Habitación: " +  room.roomNumber + "</p>" +
+                                "<p>Habitación: " + room.roomNumber + "</p>" +
                                 "<p>Capacidad: " + room.capacity + "</p>" +
                                 "<p class='font-bold'>Precio: $" + room.price + "</p>" +
                                 "</div>" +
-                                `<button class="btn bg-blue-500 text-white mt-4" onclick=reservar(` + room.roomNumber + `)>Reservar</button>`;
+                                `<button class="btn bg-blue-500 text-white mt-4" onclick=reservar(` + room.roomNumber + `,` + room.capacity + `)>Reservar</button>`;
                             document.getElementById("rooms").appendChild(roomElement);
                         });
                     })

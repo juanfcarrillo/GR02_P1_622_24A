@@ -25,23 +25,28 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @Column(columnDefinition = "text")
+    private String reservationNotes;
+
     // Constructors, getters, and setters
     public Reservation() {}
 
-    public Reservation(LocalDate startDate, LocalDate endDate, int peopleAmount, Room room) {
+    public Reservation(LocalDate startDate, LocalDate endDate, int peopleAmount, Room room, String reservationNotes) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.peopleAmount = peopleAmount;
         this.room = room;
         this.reserved = true; // Asegura que al crear una reserva, reserved sea true por defecto
+        this.reservationNotes = reservationNotes;
     }
 
-    public static Reservation createReservation(LocalDate startDate, LocalDate endDate, int peopleAmount) {
+    public static Reservation createReservation(LocalDate startDate, LocalDate endDate, int peopleAmount, String reservationNotes) {
         Reservation reservation = new Reservation();
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
         reservation.setPeopleAmount(peopleAmount);
         reservation.setReserved(true); // También asegura que reserved sea true por defecto al crear usando este método estático
+        reservation.setReservationNotes(reservationNotes);
         return reservation;
     }
 
@@ -53,6 +58,7 @@ public class Reservation {
                 ", \"endDate\":\"" + endDate + "\"" +
                 ", \"peopleAmount\":" + peopleAmount +
                 ", \"roomNumber\":" + room.getRoomNumber() +
+                ", \"reservationNotes\":\"" + reservationNotes + "\"" +
                 "}";
     }
 
@@ -102,5 +108,13 @@ public class Reservation {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public String getReservationNotes() {
+        return reservationNotes;
+    }
+
+    public void setReservationNotes(String reservationNotes) {
+        this.reservationNotes = reservationNotes;
     }
 }
