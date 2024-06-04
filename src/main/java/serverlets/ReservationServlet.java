@@ -5,16 +5,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.entity.Reserva;
 import model.entity.Reservation;
-import model.entity.Room;
-import model.services.ReservaService;
 
 import java.io.IOException;
 
 import model.services.ReservationService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name="reservation-servlet", urlPatterns = {"/reservation-servlet"})
@@ -25,60 +23,85 @@ public class ReservationServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         List<Reservation> reservations = reservationService.getAllReservations();
-         String reservationsJson = reservations.stream()
+        List<Reservation> reservations = reservationService.getAllReservations();
+        List<Reservation> activeReservations = new ArrayList<>();
+        List<Reservation> cancelledReservations = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            if (reservation.isReserved()) {
+                activeReservations.add(reservation);
+            } else {
+                cancelledReservations.add(reservation);
+            }
+        }
+
+        // Convertir las listas a JSON
+        String activeReservationsJson = activeReservations.stream()
                  .map(Reservation::toString)
                  .reduce("[", (acc, room) -> acc + room + ",")
                  .replaceFirst(".$", "]");
 
+        String cancelledReservationsJson = cancelledReservations.stream()
+                         .map(Reservation::toString)
+                         .reduce("[", (acc, room) -> acc + room + ",")
+                         .replaceFirst(".$", "]");
+
+        // Crear un objeto JSON que contenga ambas listas
+        String combinedJson = "{\"activeReservations\":" + activeReservationsJson + ",\"cancelledReservations\":" + cancelledReservationsJson + "}";
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
-        response.getWriter().print(reservationsJson);
+        response.getWriter().print(combinedJson);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //String action = request.getParameter("action");
+        String action = request.getParameter("action");
+        boolean success = false;
 
-        /*if ("create".equals(action)) {
-            // Obtener los parámetros del formulario
-            String roomNumber = request.getParameter("roomNumber");
-            String checkIn = request.getParameter("checkIn");
-            String checkOut = request.getParameter("checkOut");
-            String people = request.getParameter("peopleAmount");
+        switch (action)
+        {
+            case "create":
+                // Obtener los parámetros del formulario
+                String roomNumber = request.getParameter("roomNumber");
+                String checkIn = request.getParameter("checkIn");
+                String checkOut = request.getParameter("checkOut");
+                String people = request.getParameter("peopleAmount");
 
-            // Crear una nueva instancia de Reservation
-            Reservation newReservation = Reservation.createReservation(
-                    LocalDate.parse(checkIn),
-                    LocalDate.parse(checkOut),
-                    Integer.parseInt(people)
-            );
+                // Crear una nueva instancia de Reservation
+                Reservation newReservation = Reservation.createReservation(
+                        LocalDate.parse(checkIn),
+                        LocalDate.parse(checkOut),
+                        Integer.parseInt(people)
+                );
+                success = reservationService.createReservation(newReservation, Integer.parseInt(roomNumber));
+                break;
+            case "update":
 
-            reservationService.createReservation(newReservation, Integer.parseInt(roomNumber));
+                Long reservationId = Long.parseLong(request.getParameter("reservationId"));
+                String newRoomNumber = request.getParameter("newRoomNumber");
+                String newCheckIn = request.getParameter("newCheckIn");
+                String newCheckOut = request.getParameter("newCheckOut");
+                String newPeople = request.getParameter("newPeopleAmount");
 
-            response.sendRedirect("reservations.jsp");
-        } else if ("update".equals(action)) {
-            */Long reservationId = Long.parseLong(request.getParameter("reservationId"));
-            String newRoomNumber = request.getParameter("newRoomNumber"); // Asegúrate de usar el nombre correcto del parámetro
-            String newCheckIn = request.getParameter("newCheckIn"); // Asegúrate de usar el nombre correcto del parámetro
-            String newCheckOut = request.getParameter("newCheckOut"); // Asegúrate de usar el nombre correcto del parámetro
-            String newPeople = request.getParameter("newPeopleAmount"); // Asegúrate de usar el nombre correcto del parámetro
+                success = reservationService.updateReservation(
+                        reservationId,
+                        LocalDate.parse(newCheckIn),
+                        LocalDate.parse(newCheckOut),
+                        Integer.parseInt(newPeople),
+                        Integer.parseInt(newRoomNumber)
+                );
+                break;
+            case "delete":
+                Long reservationIdDelete = Long.parseLong(request.getParameter("reservationIdEliminar"));
+                success = reservationService.deleteReservation(reservationIdDelete);
+                break;
+        }
 
-            boolean success = reservationService.updateReservation(
-                    reservationId,
-                    LocalDate.parse(newCheckIn),
-                    LocalDate.parse(newCheckOut),
-                    Integer.parseInt(newPeople),
-                    Integer.parseInt(newRoomNumber)
-            );
-
-            response.sendRedirect("reservations.jsp");
-            /*if (success) {
-                response.sendRedirect("reservations.jsp?message=Reservation updated successfully");
-            } else {
-                response.sendRedirect("reservations.jsp?error=Reservation update failed due to unavailability");
-            }
-        }*/
+        if (success) {
+            response.sendRedirect("reservations.jsp?message=Reservation " + action + "successfully");
+        } else {
+            response.sendRedirect("reservations.jsp?error=Reservation " + action + "failed");
+        }
     }
 
 }

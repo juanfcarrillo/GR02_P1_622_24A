@@ -19,6 +19,7 @@
             <div class="modal-box text-white">
                 <h2 id="modal-title">Reservar Habitación</h2>
                 <form action="reservation-servlet" method="POST" class="space-y-4">
+                    <input type="hidden" name="action" value="create">
                     <input type="hidden" id="roomNumber" name="roomNumber">
                     <div>
                         <label for="checkIn" class="block">Check In:</label>
