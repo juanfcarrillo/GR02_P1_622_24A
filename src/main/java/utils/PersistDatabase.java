@@ -98,4 +98,11 @@ public class PersistDatabase {
             throw e;
         }
     }
+
+    public <T> TypedQuery<T> createQuery(String qlString, Class<T> entityClass) {
+        createConection();
+        TypedQuery result = conexionBD.getEntityManager().createQuery(qlString, entityClass);
+        commitTransaction();
+        return result;
+    }
 }
