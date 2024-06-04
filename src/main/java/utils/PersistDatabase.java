@@ -2,13 +2,8 @@ package utils;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-
-import java.time.LocalDate;
 import java.util.List;
-import model.entity.Reservation;
-import jakarta.persistence.EntityManager;
-
-import static org.eclipse.persistence.jpa.JpaHelper.getEntityManager;
+import jakarta.persistence.*;
 
 public class PersistDatabase {
     private final ConexionBD conexionBD;
@@ -19,6 +14,10 @@ public class PersistDatabase {
 
     public PersistDatabase(ConexionBD conexionBD) {
         this.conexionBD = conexionBD;
+    }
+
+    public EntityManager getEntityManager() {
+        return conexionBD.getEntityManager();
     }
 
     public int persist(Object object) {
@@ -78,6 +77,17 @@ public class PersistDatabase {
         return conexionBD.getEntityManager().find(entityClass, primaryKey);
     }
 
+    public <T> void create(T entity) {
+        try {
+            createConection();
+            conexionBD.getEntityManager().persist(entity);
+            commitTransaction();
+        }catch (Exception e) {
+            rollbackTransaction();
+            throw e;
+        }
+    }
+
     public <T> void update(T entity) {
         try {
             createConection();
@@ -87,23 +97,5 @@ public class PersistDatabase {
             rollbackTransaction();
             throw e;
         }
-    }
-
-    // Método para validar disponibilidad de reserva
-    public List<Reservation> checkReservationAvailability(Long roomId, Long reservationId, LocalDate newStartDate, LocalDate newEndDate) {
-        EntityManager entityManager = conexionBD.getEntityManager();
-        List<Reservation> conflictingReservations = entityManager.createQuery(
-                        "SELECT r FROM Reservation r " +
-                                "WHERE r.room.id = :roomId " +
-                                "AND r.id != :reservationId " +
-                                "AND (:newStartDate BETWEEN r.startDate AND r.endDate OR :newEndDate BETWEEN r.startDate AND r.endDate)",
-                        Reservation.class)
-                .setParameter("roomId", roomId)
-                .setParameter("reservationId", reservationId)
-                .setParameter("newStartDate", newStartDate)
-                .setParameter("newEndDate", newEndDate)
-                .getResultList();
-
-        return conflictingReservations;
     }
 }

@@ -46,6 +46,7 @@
         <div class="modal-box text-white">
             <h2 id="modal-title">Modificar Reserva</h2>
             <form action="reservation-servlet" method="POST" class="space-y-4">
+                <input type="hidden" name="action" value="update">
                 <input type="hidden" id="reservationId" name="reservationId">
                 <div>
                     <label for="newCheckIn" class="block">Nueva Fecha de Check In:</label>
@@ -68,6 +69,22 @@
         </div>
     </dialog>
 
+    <!-- Modal para eliminar reserva -->
+    <dialog id="modalEliminarReserva" class="modal" role="dialog" aria-labelledby="modal-title-eliminar" aria-describedby="modal-description-eliminar">
+        <div class="modal-box text-white">
+            <h2 id="modal-title-eliminar">Eliminar Reserva</h2>
+            <form id="formEliminarReserva" action="reservation-servlet" method="POST" class="space-y-4">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" id="reservationIdEliminar" name="reservationIdEliminar">
+                <p>¿Estás seguro que deseas eliminar esta reserva?</p>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" class="btn bg-gray-400 text-white" onclick="closeModal('modalEliminarReserva')">Cancelar</button>
+                    <input type="submit" class="btn bg-red-500 text-white" value="Eliminar">
+                </div>
+            </form>
+        </div>
+    </dialog>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             fetch('reservation-servlet')
@@ -84,8 +101,9 @@
                             "<p>Check Out: " + reservation.endDate + "</p>" +
                             "<p>Room: " + reservation.roomNumber + "</p>" +
                             "<p>People Amount: " + reservation.peopleAmount + "</p>" +
-                            "<button onclick='modificarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white'>Modificar</button>" +
-                            "</div>";
+                            "<button onclick='modificarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Modificar</button>" +
+                            "<button onclick='eliminarReserva(" + reservation.id + ")' class='btn bg-blue-500 text-white m-2'>Eliminar</button>" +
+                        "</div>";
                         document.getElementById("reservations").appendChild(reservationElement);
                     });
                 });
@@ -93,7 +111,12 @@
 
         function modificarReserva(id) {
             document.getElementById("reservationId").value = id;
-            document.getElementById("modalModificarReserva").showModal();
+            document.getElementById("modalEliminarReserva")
+        }
+
+        function eliminarReserva(id) {
+            document.getElementById("reservationIdEliminar").value = id;
+            document.getElementById("modalEliminarReserva").showModal();
         }
     </script>
 </main>

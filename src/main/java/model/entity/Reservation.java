@@ -18,6 +18,9 @@ public class Reservation {
     @Column(nullable = false)
     private int peopleAmount;
 
+    @Column(nullable = false)
+    private boolean reserved = true;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
@@ -30,6 +33,7 @@ public class Reservation {
         this.endDate = endDate;
         this.peopleAmount = peopleAmount;
         this.room = room;
+        this.reserved = true; // Asegura que al crear una reserva, reserved sea true por defecto
     }
 
     public static Reservation createReservation(LocalDate startDate, LocalDate endDate, int peopleAmount) {
@@ -37,6 +41,7 @@ public class Reservation {
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
         reservation.setPeopleAmount(peopleAmount);
+        reservation.setReserved(true); // También asegura que reserved sea true por defecto al crear usando este método estático
         return reservation;
     }
 
@@ -81,6 +86,14 @@ public class Reservation {
 
     public void setPeopleAmount(int peopleAmount) {
         this.peopleAmount = peopleAmount;
+    }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
     }
 
     public Room getRoom() {

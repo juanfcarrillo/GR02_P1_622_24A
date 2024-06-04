@@ -1,5 +1,6 @@
 package model.services;
 
+import jakarta.persistence.EntityManager;
 import model.entity.Reservation;
 import model.entity.Room;
 import utils.PersistDatabase;
@@ -21,20 +22,18 @@ public class ReservationService {
         this.roomService = roomService;
     }
 
-    public void createReservation(Reservation reservation, int roomNumber) {
+    public boolean createReservation(Reservation reservation, int roomNumber) {
         Room room = roomService.getRoomByNumber(roomNumber);
         System.out.println("Room found: " + room);
         if (room != null) {
             reservation.setRoom(room);
             System.out.println("Creating reservation: " + reservation);
-            int result = persistDatabase.persist(reservation);
-            if (result == 0) {
-                System.out.println("Reservation created successfully");
-            } else {
-                System.out.println("Error creating the reservation");
-            }
+            //int result = persistDatabase.persist(reservation);
+            persistDatabase.create(reservation);
+            return true;
         } else {
             System.out.println("Room not found");
+            return false;
         }
     }
 
@@ -48,8 +47,7 @@ public class ReservationService {
             }
 
             // Validar disponibilidad
-            List<Reservation> conflictingReservations = persistDatabase
-                    .checkReservationAvailability(newRoom.getId(), reservationId, newStartDate, newEndDate);
+            List<Reservation> conflictingReservations = checkReservationAvailability(newRoom.getId(), reservationId, newStartDate, newEndDate);
 
             if (conflictingReservations.isEmpty()) {
                 existingReservation.setStartDate(newStartDate);
@@ -65,11 +63,18 @@ public class ReservationService {
         return false; // Reserva no encontrada
     }
 
+    public boolean deleteReservation(Long reservationId) {
+        Reservation reservation = persistDatabase.find(Reservation.class, reservationId);
 
+        if (reservation != null) {
+            reservation.setReserved(false);
+            persistDatabase.update(reservation);
+            return true;
+        }
 
-    public void deleteReservation() {
-        // Delete an existing reservation
+        return false; // Reserva no encontrada
     }
+
 
     public void getReservation() {
         // Get an existing reservation
@@ -77,5 +82,23 @@ public class ReservationService {
 
     public List<Reservation> getAllReservations() {
         return persistDatabase.getAll(Reservation.class);
+    }
+
+    // Método para validar disponibilidad de reserva
+    public List<Reservation> checkReservationAvailability(Long roomId, Long reservationId, LocalDate newStartDate, LocalDate newEndDate) {
+        EntityManager entityManager = persistDatabase.getEntityManager();
+        List<Reservation> conflictingReservations = entityManager.createQuery(
+                        "SELECT r FROM Reservation r " +
+                                "WHERE r.room.id = :roomId " +
+                                "AND r.id != :reservationId " +
+                                "AND (:newStartDate BETWEEN r.startDate AND r.endDate OR :newEndDate BETWEEN r.startDate AND r.endDate)",
+                        Reservation.class)
+                .setParameter("roomId", roomId)
+                .setParameter("reservationId", reservationId)
+                .setParameter("newStartDate", newStartDate)
+                .setParameter("newEndDate", newEndDate)
+                .getResultList();
+
+        return conflictingReservations;
     }
 }
