@@ -38,21 +38,47 @@ public class ReservationServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener los parámetros del formulario
-        String roomNumber = request.getParameter("roomNumber");
-        String checkIn = request.getParameter("checkIn");
-        String checkOut = request.getParameter("checkOut");
-        String people = request.getParameter("peopleAmount");
+        //String action = request.getParameter("action");
 
-        // Crear una nueva instancia de Reservation
-        Reservation newReservation = Reservation.createReservation(
-                LocalDate.parse(checkIn),
-                LocalDate.parse(checkOut),
-                Integer.parseInt(people)
-        );
+        /*if ("create".equals(action)) {
+            // Obtener los parámetros del formulario
+            String roomNumber = request.getParameter("roomNumber");
+            String checkIn = request.getParameter("checkIn");
+            String checkOut = request.getParameter("checkOut");
+            String people = request.getParameter("peopleAmount");
 
-        reservationService.createReservation(newReservation, Integer.parseInt(roomNumber));
+            // Crear una nueva instancia de Reservation
+            Reservation newReservation = Reservation.createReservation(
+                    LocalDate.parse(checkIn),
+                    LocalDate.parse(checkOut),
+                    Integer.parseInt(people)
+            );
 
-        response.sendRedirect("reservations.jsp");
+            reservationService.createReservation(newReservation, Integer.parseInt(roomNumber));
+
+            response.sendRedirect("reservations.jsp");
+        } else if ("update".equals(action)) {
+            */Long reservationId = Long.parseLong(request.getParameter("reservationId"));
+            String newRoomNumber = request.getParameter("newRoomNumber"); // Asegúrate de usar el nombre correcto del parámetro
+            String newCheckIn = request.getParameter("newCheckIn"); // Asegúrate de usar el nombre correcto del parámetro
+            String newCheckOut = request.getParameter("newCheckOut"); // Asegúrate de usar el nombre correcto del parámetro
+            String newPeople = request.getParameter("newPeopleAmount"); // Asegúrate de usar el nombre correcto del parámetro
+
+            boolean success = reservationService.updateReservation(
+                    reservationId,
+                    LocalDate.parse(newCheckIn),
+                    LocalDate.parse(newCheckOut),
+                    Integer.parseInt(newPeople),
+                    Integer.parseInt(newRoomNumber)
+            );
+
+            response.sendRedirect("reservations.jsp");
+            /*if (success) {
+                response.sendRedirect("reservations.jsp?message=Reservation updated successfully");
+            } else {
+                response.sendRedirect("reservations.jsp?error=Reservation update failed due to unavailability");
+            }
+        }*/
     }
+
 }
