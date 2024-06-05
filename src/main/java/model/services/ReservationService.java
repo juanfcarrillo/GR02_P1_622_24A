@@ -1,10 +1,10 @@
 package model.services;
 
-import jakarta.persistence.EntityManager;
 import model.entity.Reservation;
 import model.entity.Room;
 import utils.PersistDatabase;
 
+import jakarta.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -87,19 +87,19 @@ public class ReservationService {
 
     // Método para validar disponibilidad de reserva
     public List<Reservation> checkReservationAvailability(Long roomId, Long reservationId, LocalDate newStartDate, LocalDate newEndDate) {
-        EntityManager entityManager = persistDatabase.getEntityManager();
-        List<Reservation> conflictingReservations = entityManager.createQuery(
+        TypedQuery<Reservation> typedQuery = persistDatabase.createQuery(
                         "SELECT r FROM Reservation r " +
                                 "WHERE r.room.id = :roomId " +
-                                "AND r.id != :reservationId " +
+                                "AND r.id <> :reservationId " +
                                 "AND (:newStartDate BETWEEN r.startDate AND r.endDate OR :newEndDate BETWEEN r.startDate AND r.endDate)",
                         Reservation.class)
                 .setParameter("roomId", roomId)
                 .setParameter("reservationId", reservationId)
                 .setParameter("newStartDate", newStartDate)
-                .setParameter("newEndDate", newEndDate)
-                .getResultList();
+                .setParameter("newEndDate", newEndDate);
 
-        return conflictingReservations;
+        return typedQuery.getResultList();
     }
+
+
 }
