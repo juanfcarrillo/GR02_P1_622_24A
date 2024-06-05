@@ -3,15 +3,16 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import model.entity.Reservation;
 import model.entity.Room;
+import utils.PersistDatabase;
 
 import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
+        PersistDatabase persistDatabase = new PersistDatabase();
 
-        em.getTransaction().begin();
+        Room room = new Room(101, 100.0, 2, "Prueba", "Prueba", "Prueba");
+        persistDatabase.create(room);
 
         //Room room = new Room(101, 100.0, 2, "Prueba");
         //em.persist(room);

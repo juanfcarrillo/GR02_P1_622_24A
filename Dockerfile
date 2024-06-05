@@ -6,5 +6,6 @@ RUN mvn package
 
 FROM bitnami/tomcat:10.1.23 as serve
 COPY --from=build /usr/GR02_P1_622_24A/target/hotel.war /opt/bitnami/tomcat/webapps
+ENV ENVIRONMENT=production
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
