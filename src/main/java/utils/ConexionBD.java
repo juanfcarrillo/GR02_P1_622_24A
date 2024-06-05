@@ -7,7 +7,14 @@ import java.util.List;
 public class ConexionBD {
 
     public ConexionBD() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("default");
+        String envType = System.getenv("ENVIRONMENT");
+        System.out.println("AKHJSDhajksd: "+ envType);
+        if (envType.equals("production")) {
+            entityManagerFactory = Persistence.createEntityManagerFactory("production");
+        }else {
+            entityManagerFactory = Persistence.createEntityManagerFactory("default");
+        }
+
         entityManager = entityManagerFactory.createEntityManager();
         transaction = entityManager.getTransaction();
     }
