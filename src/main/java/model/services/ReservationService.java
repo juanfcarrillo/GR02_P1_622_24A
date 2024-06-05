@@ -91,21 +91,27 @@ public class ReservationService {
         return false; // Reserva no encontrada
     }
 
-    /**
-     * Elimina una reserva existente.
-     * @param reservationId ID de la reserva a eliminar.
-     * @return true si la reserva se elimina exitosamente, false si la reserva no se encuentra.
-     */
     public boolean deleteReservation(Long reservationId) {
         Reservation reservation = persistDatabase.find(Reservation.class, reservationId);
 
         if (reservation != null) {
-            reservation.setReserved(false);
-            persistDatabase.update(reservation);
-            return true;
+            if (verifyRestriction(reservation)) {
+                reservation.setReserved(false);
+                persistDatabase.update(reservation);
+                return true;
+            } else {
+                System.out.println("Reservation cannot be deleted less than 15 days before the start date.");
+                return false; // Restricción de cancelación
+            }
         }
 
         return false; // Reserva no encontrada
+    }
+
+    public boolean verifyRestriction(Reservation reservation) {
+        LocalDate today = LocalDate.now();
+        LocalDate reservationStartDate = reservation.getStartDate();
+        return today.isBefore(reservationStartDate.minusDays(15));
     }
 
     /**

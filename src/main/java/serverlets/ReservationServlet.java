@@ -110,6 +110,7 @@ public class ReservationServlet extends HttpServlet {
             response.sendRedirect("reservations.jsp?message=Reservation " + action + "successfully");
         } else {
             response.sendRedirect("reservations.jsp?error=Reservation " + action + "failed");
+            response.getWriter().write("<script>alert(`No se puede cancelar reservas 15 días previo a su fecha de inicio.`);</script>");
         }
     }
 
