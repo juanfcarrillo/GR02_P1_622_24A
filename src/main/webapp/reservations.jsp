@@ -48,18 +48,18 @@
                 </div>
 
                 <div>
-                    <label for="startDate" class="block">Nueva Fecha de Check In:</label>
-                    <input type="date" id="startDate" name="startDate" class="input input-bordered w-full" required>
+                    <label for="newCheckIn" class="block">Nueva Fecha de Check In:</label>
+                    <input type="date" id="newCheckIn" name="newCheckIn" class="input input-bordered w-full" required>
                 </div>
 
                 <div>
-                    <label for="endDate" class="block">Nueva Fecha de Check Out:</label>
-                    <input type="date" id="endDate" name="endDate" class="input input-bordered w-full" required>
+                    <label for="newCheckOut" class="block">Nueva Fecha de Check Out:</label>
+                    <input type="date" id="newCheckOut" name="newCheckOut" class="input input-bordered w-full" required>
                 </div>
 
                 <div>
-                    <label for="reservationNotes" class="block">Nuevas Notas de Reserva:</label>
-                    <textarea id="reservationNotes" name="reservationNotes" class="textarea textarea-bordered w-full" rows="4"></textarea>
+                    <label for="newReservationNotes" class="block">Nuevas Notas de Reserva:</label>
+                    <textarea id="newReservationNotes" name="newReservationNotes" class="textarea textarea-bordered w-full" rows="4"></textarea>
                 </div>
 
                 <input type="submit" class="btn w-full bg-blue-500 text-white" value="Modificar">
@@ -148,7 +148,7 @@
         });
 
 
-        function modificarReserva(id, room, capacity, checkIn, checkOut, notes) {
+        function modificarReserva(id, room, capacity) {
             // Llenar los campos del formulario con la información de la reserva seleccionada
             document.getElementById("reservationId").value = id;
             document.getElementById("roomNumber").value = room;
