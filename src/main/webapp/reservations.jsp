@@ -162,16 +162,14 @@
                 console.error("Dialog API not supported");
             }
 
-            // Mostrar un mensaje de alerta
-            alert('La reserva ha sido modificada exitosamente');
+    
         }
 
         function eliminarReserva(id) {
             document.getElementById("reservationIdEliminar").value = id;
             document.getElementById("modalEliminarReserva").showModal();
         }
-            // Mostrar un mensaje de alerta
-            alert('La reserva ha sido cancelada exitosamente');
+
 
     </script>
 </main>
