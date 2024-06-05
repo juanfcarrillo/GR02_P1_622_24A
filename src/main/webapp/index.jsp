@@ -87,6 +87,43 @@
                         console.error('Error fetching room data:', error);
                     });
             });
+
+            function validarFechas(checkIn, checkOut) {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+
+                if (checkIn <= hoy) {
+                    alert('La fecha de check-in debe ser mayor a la fecha actual.');
+                    return false;
+                }
+
+                if (checkOut <= hoy) {
+                    alert('La fecha de check-out debe ser mayor a la fecha actual.');
+                    return false;
+                }
+
+                if (checkOut <= checkIn) {
+                    alert('La fecha de check-out debe ser mayor a la fecha de check-in.');
+                    return false;
+                }
+
+                if (checkIn === checkOut) {
+                    alert('La fecha de check-in y check-out no pueden ser la misma.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.querySelector('form').addEventListener('submit', function(event) {
+                const checkIn = new Date(document.getElementById('checkIn').value);
+                const checkOut = new Date(document.getElementById('checkOut').value);
+
+                if (!validarFechas(checkIn, checkOut)) {
+                    alert('Las fechas ingresadas son inválidas. Por favor, ingresa fechas válidas.');
+                    event.preventDefault();
+                }
+            });
         </script>
     </section>
 </main>
