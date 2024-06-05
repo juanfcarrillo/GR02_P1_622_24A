@@ -25,6 +25,11 @@
     </section>
 
     <!-- Modal para modificar reserva -->
+
+    <div class="flex justify-center mt-6">
+        <a href="http://localhost:8080/hotel/" class="btn bg-green-500 text-white">Realizar otra reservación</a>
+    </div>
+
     <dialog id="modalModificarReserva" class="modal" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
         <div class="modal-box text-white">
             <h2 id="modal-title">Modificar Reserva</h2>
@@ -156,12 +161,17 @@
             } else {
                 console.error("Dialog API not supported");
             }
+
+            // Mostrar un mensaje de alerta
+            alert('La reserva ha sido modificada exitosamente');
         }
 
         function eliminarReserva(id) {
             document.getElementById("reservationIdEliminar").value = id;
             document.getElementById("modalEliminarReserva").showModal();
         }
+            // Mostrar un mensaje de alerta
+            alert('La reserva ha sido cancelada exitosamente');
 
     </script>
 </main>
