@@ -86,3 +86,13 @@ docker run -p 8080:8080 --network my-network jexdev13/webapp:latest_web
 Once the application is up and running, you can access the WebApp through the following URL:
 
 [http://localhost:8080/hotel](http://localhost:8080/hotel)
+
+
+![image](https://github.com/juanfcarrillo/GR02_P1_622_24A/assets/141116497/a1957d85-45de-4028-9aff-e8145da5d9ce)
+![image](https://github.com/juanfcarrillo/GR02_P1_622_24A/assets/141116497/98674674-a0bc-436c-a52c-42aedf66b597)
+![image](https://github.com/juanfcarrillo/GR02_P1_622_24A/assets/141116497/1a8d0600-e768-417b-aeb5-afef6a440510)
+![image](https://github.com/juanfcarrillo/GR02_P1_622_24A/assets/141116497/21184877-87ca-4f6b-8b00-83a30cb624fd)
+![image](https://github.com/juanfcarrillo/GR02_P1_622_24A/assets/141116497/02d5e819-3c5b-482b-97e7-31ca9bbf6f7d)
+
+
+
