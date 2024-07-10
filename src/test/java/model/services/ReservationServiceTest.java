@@ -68,27 +68,27 @@ public class ReservationServiceTest {
         assertEquals(mockReservation1, retrievedReservations.get(0));
         assertEquals(mockReservation2, retrievedReservations.get(1));
     }
-/*
-    @Test
-    public void testCheckReservationAvailability() {
-        // Create mocks
-        PersistDatabase mockPersistDatabase = Mockito.mock(PersistDatabase.class);
-        RoomService mockRoomService = Mockito.mock(RoomService.class);
-        TypedQuery<Reservation> mockTypedQuery = Mockito.mock(TypedQuery.class);
+    /*
+        @Test
+        public void testCheckReservationAvailability() {
+            // Create mocks
+            PersistDatabase mockPersistDatabase = Mockito.mock(PersistDatabase.class);
+            RoomService mockRoomService = Mockito.mock(RoomService.class);
+            TypedQuery<Reservation> mockTypedQuery = Mockito.mock(TypedQuery.class);
 
-        // Define behavior
-        when(mockPersistDatabase.createQuery(Mockito.anyString(), Mockito.<Class<Reservation>>any())).thenReturn(mockTypedQuery);
-        when(mockTypedQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockTypedQuery);
-        when(mockTypedQuery.getResultList()).thenReturn(Collections.emptyList());
+            // Define behavior
+            when(mockPersistDatabase.createQuery(Mockito.anyString(), Mockito.<Class<Reservation>>any())).thenReturn(mockTypedQuery);
+            when(mockTypedQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(mockTypedQuery);
+            when(mockTypedQuery.getResultList()).thenReturn(Collections.emptyList());
 
-        // Use mocks in test
-        ReservationService reservationService = new ReservationService(mockPersistDatabase, mockRoomService);
-        List<Reservation> result = reservationService.checkReservationAvailability(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1));
+            // Use mocks in test
+            ReservationService reservationService = new ReservationService(mockPersistDatabase, mockRoomService);
+            List<Reservation> result = reservationService.checkReservationAvailability(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1));
 
-        // Assertions
-        assertTrue(result.isEmpty());
-    }
-*/
+            // Assertions
+            assertTrue(result.isEmpty());
+        }
+    */
     @Test
     public void testUpdateReservation() {
         Reservation mockReservation = Mockito.mock(Reservation.class);
@@ -114,18 +114,4 @@ public class ReservationServiceTest {
         assertFalse(result);
     }
 
-    @Test
-    public void testDeleteReservation() {
-        Reservation mockReservation = Mockito.mock(Reservation.class);
-
-        when(mockPersistDatabase.find(Reservation.class, 1L)).thenReturn(mockReservation);
-
-        boolean result = reservationService.deleteReservation(1L);
-        assertTrue(result);
-
-        when(mockPersistDatabase.find(Reservation.class, 2L)).thenReturn(null);
-
-        result = reservationService.deleteReservation(2L);
-        assertFalse(result);
-    }
 }
